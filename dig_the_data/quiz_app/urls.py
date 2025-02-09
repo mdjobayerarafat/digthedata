@@ -24,7 +24,7 @@ handler404 = custom_404_view
 # URL patterns for web views and REST APIs
 urlpatterns = [
     # Web Views
-    path('login/', views.login_view, name='login'),
+    path('login/', views.login_view, name='login_view'),
     path('profile/', team_profile, name='team_profile'),
     path('quiz/', views.quiz_view, name='quiz'),
     path('scoreboard/', views.scoreboard, name='scoreboard'),

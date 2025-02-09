@@ -41,7 +41,12 @@ def team_profile(request):
 @login_required
 def quiz_view(request):
     team = Team.objects.get(user=request.user)
-    quiz = Quiz.objects.first()
+    quiz = Quiz.objects.first()  # Assuming there's only one quiz
+
+    # Check if the quiz is active
+    if not quiz.is_active:
+        return redirect('team_profile')  # Redirect to team profile if quiz is inactive
+
     common_questions = Question.objects.filter(quiz=quiz, common_question=True)
     unique_questions = Question.objects.filter(teamquestion__team=team, common_question=False)
     submitted_answers = Answer.objects.filter(team=team)
@@ -53,7 +58,6 @@ def quiz_view(request):
         'answered_questions': answered_questions or {},
         'team': team
     })
-
 @require_POST
 def submit_answer(request, question_id):
     try:
