@@ -241,3 +241,5 @@ class ScoreboardAPI(APIView):
 
         scoreboard_data.sort(key=lambda x: (-x['score'], x['approved_requests']))
         return Response(scoreboard_data)
+
+   # //by MD JOBAYER ARAFAT ///
