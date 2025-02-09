@@ -4,7 +4,7 @@ from . import views
 from .views import (
     team_profile, submit_answer, request_hint, hint_requests, scoreboard, custom_404_view,
     TeamViewSet, QuizViewSet, QuestionViewSet, HintRequestViewSet, AnswerViewSet,
-    TeamUserViewSet, HintViewSet, HintNotificationViewSet, SubmitAnswerAPI, ScoreboardAPI, LoginView
+    TeamUserViewSet, HintViewSet, HintNotificationViewSet, SubmitAnswerAPI, ScoreboardAPI, LoginView, custom_500_view
 )
 
 # Django REST Framework Router for REST APIs
@@ -20,6 +20,7 @@ router.register(r'hint-notifications', HintNotificationViewSet)
 
 # Custom 404 handler
 handler404 = custom_404_view
+handler500 = custom_500_view
 
 # URL patterns for web views and REST APIs
 urlpatterns = [
