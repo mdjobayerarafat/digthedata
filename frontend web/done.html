@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Complete</title>
+    <style>
+       
+            body { 
+                font-family: Arial, sans-serif; 
+                max-width: 100%; 
+                margin: 0; 
+                padding: 20px; 
+                background-color: #f4f4f4;
+                background: linear-gradient(45deg, rgb(161, 0, 179), rgb(97, 0, 208));
+                background-size: 200% 200%;
+                animation: moving-grad 10s ease infinite;
+            }
+        
+            @keyframes moving-grad {    
+                0% {
+                    background-position: 0% 50%;
+                }
+                50% {
+                    background-position: 100% 50%; 
+                }
+                100% {
+                    background-position: 0% 50%;
+                }
+            }
+        h1 {
+            color: #ff0000;
+        }
+        p {
+            font-size: 18px;
+        }
+        .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #ff0000;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center; background-color: rgba(255, 255, 255, 0.247); padding: 20px; border-radius: 10px;">
+        <div style="justify-content: center;background-color: rgba(254, 202, 202, 0.514); padding: 20px; border-radius: 10px;">
+            <h1>Registration Complete</h1>
+            <p>Thank you for registering!<br><br> Your registration is now complete.</p>
+            <a href="index.html" class="button">Go to Homepage</a>
+        </div>
+    </div>
+</body>
+</html>

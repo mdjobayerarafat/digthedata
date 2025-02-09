@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 100%; 
+            margin: 0; 
+            padding: 20px; 
+            background-color: #f4f4f4;
+            background: linear-gradient(45deg, rgb(161, 0, 179), rgb(97, 0, 208));
+            background-size: 200% 200%;
+            animation: moving-grad 10s ease infinite;
+        }
+    
+        @keyframes moving-grad {    
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%; 
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        @media (min-width: 600px) {
+            body {
+            max-width: 600px;
+            margin: auto;
+            }
+        }
+        
+        input, select, button { 
+            width: 100%; 
+            padding: 10px; 
+            margin: 5px 0; 
+            border: 1px solid #ccc; 
+            border-radius: 5px;
+        }
+        button {
+            background-color: #ff0000;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        h2 {
+            text-align: center;
+        }
+        #loading {
+            display: none;
+            text-align: center;
+            font-size: 18px;
+            color: #333;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div style="background-color: rgba(255, 255, 255, 0.8); padding: 70px; border-radius: 10px; max-width: 500px; margin: auto; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <h2>Registration Form</h2>
+        <form id="registrationForm">
+            <label for="department" style="font-weight: bold;">Your Name</label>
+            <input type="text" name="fullname" placeholder="Full Name" required><br><br>
+            <label for="department" style="font-weight: bold;">ID</label>
+            <input type="text" name="id" placeholder="ID" required><br><br>
+            <div style="width: 110%;">
+                <label for="department" style="font-weight: bold;">Department</label>
+                <select id="department" name="department" required>
+                    <option value="" disabled selected>Select your department</option>
+                    <option value="TE">Textile Engineering (TE)</option>
+                    <option value="IPE">Industrial & Production Engineering (IPE)</option>
+                    <option value="FDAE">Fashion Design & Apparel Engineering (FDAE)</option>
+                    <option value="CSE">Computer Science & Engineering (CSE)</option>
+                    <option value="EEE">Electrical & Electronic Engineering (EEE)</option>
+                </select>
+            </div><br>
+            <label for="department" style="font-weight: bold;">Email</label>
+            <input type="email" name="email" placeholder="Email" required><br><br>
+            <label for="department" style="font-weight: bold;">Contact Number</label>
+            <input type="tel" name="contact" placeholder="Contact Number" required><br><br>
+            <button type="submit">Submit</button>
+        </form>
+        <p id="loading">Loading...</p> <!-- Loading text -->
+    </div>
+    <p id="response"></p>
+
+    <script>
+        document.getElementById("registrationForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            document.getElementById("loading").style.display = "block"; // Show loading text
+
+            var formData = new FormData(this);
+            fetch("https://script.google.com/macros/s/AKfycbyyB8DgOFeN310r514JAhu1oMA3RYgEQTaZ4MlmtHd0QfpOj7c_ale_zWVldL1XymXb/exec", { 
+                method: "POST", 
+                body: formData 
+            })
+            .then(response => response.text())  // Get response as text
+            .then(data => {
+                document.getElementById("response").innerText = data;  // Show response message
+                document.getElementById("registrationForm").reset();  // Reset form after successful submission
+                window.location.href = 'done.html';  // Redirect to done.html
+            })
+            .catch(error => {
+                document.getElementById("loading").style.display = "none"; // Hide loading text on error
+                document.getElementById("response").innerText = "Error: " + error.message;
+            });
+        });
+    </script>
+    
+</body>
+</html>
