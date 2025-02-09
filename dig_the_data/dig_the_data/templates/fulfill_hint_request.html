@@ -1,0 +1,13 @@
+<!-- fulfill_hint_request.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Fulfill Hint Request</h2>
+<p>Request from: {{ hint_request.team.name }} for question: {{ hint_request.question.question_text }}</p>
+<form method="post">
+    {% csrf_token %}
+    <label for="hint_text">Hint Text:</label>
+    <textarea id="hint_text" name="hint_text" required></textarea>
+    <button type="submit">Submit Hint</button>
+</form>
+{% endblock %}

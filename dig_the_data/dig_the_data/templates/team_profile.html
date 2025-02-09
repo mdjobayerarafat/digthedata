@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meet Our Team</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(
+                45deg,
+                #333,
+                #4b0082,
+                #800080,
+                #7b68ee,
+                #4682b4
+            );
+            display: flex;
+            animation: gradient 15s ease infinite;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column; /* Stack elements vertically */
+        }
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+          header {
+                background: rgba(
+                    0,
+                    0,
+                    0,
+                    0.5
+                ); /* Semi-transparent background */
+                color:#ffffff;
+                padding: 20px;
+                width: 70%; /* Width of the header */
+                border-radius: 10px;
+                text-align: center; /* Center the text */
+                margin-bottom: 20px; /* Space between header and container */
+            }
+            header h1 {
+            color: #ffffff; /* Set the color of the h1 element to white */
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping of cards */
+            justify-content: space-between;
+            width: 80%;
+            max-width: 1000px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0); /* Fully transparent background for the container */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Black box shadow for the container */
+            border-radius: 10px;
+            margin-bottom: 20px; /* Space below the container */
+        }
+        .card {
+            width: 23%; /* Default width for larger screens */
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8); /* Darker box shadow for cards */
+            margin-bottom: 20px;
+            background-color: rgba(255, 255, 255, 0.3); /* Semi-transparent background for cards */
+            box-sizing: border-box; /* Include padding in width */
+        }
+
+        .card img.profile {
+            width: 100px; /* Profile image size */
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .card img.social {
+            width: 60px; /* Social icon size */
+            height: 60px;
+            margin: 0 20px; /* Space between icons */
+        }
+
+        .card h3 {
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        .card h4 {
+            font-size: 14px;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .card .social-links {
+            display: flex;
+            justify-content: center;
+        }
+
+        .card .social-links a {
+            display: inline-block;
+            color: #333;
+            text-decoration: none;
+            font-size: 20px;
+        }
+
+        .card .social-links a:hover {
+            color: #007bff;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .card {
+                width: 48%; /* Two cards per row on medium screens */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                width: 100%; /* One card per row on small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header >
+        <h1>Meet Team: {{ team.name }}</h1>
+    </header>
+
+    <div class="container">
+        {% for user in team_users %}
+        <div class="card">
+            <img class="profile" src="{% static 'img/profile.jpg' %}" alt="profile" />
+            <h3>{{ user.name }}</h3>
+            <h4>{{ user.position }}</h4>
+            <h4>ID: {{ user.class_id }}</h4>
+            <h4>Number: {{ user.wp_number }}</h4>
+            <h4>Mail: {{ user.email }}</h4>
+            <div class="social-links">
+                <a href="mailto:{{ user.email }}" target="_blank">
+                    <img class="social" src="{% static 'img/email.png' %}" alt="Email" />
+                </a>
+                <a href="tel:{{ user.wp_number }}" target="_blank">
+                    <img class="social" src="{% static 'img/whatsapp.png' %}" alt="WhatsApp" />
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+
+    <div style="text-align: center; margin-top: 20px; width: 100%">
+         {% if quiz.is_active %}
+        <button
+            style="
+                background-color: rgb(255, 47, 0);
+                font-size: 24px;
+                padding: 20px 40px;
+                border-radius: 50px;
+                border: none;
+                color: white;
+            "
+            onclick="location.href='{% url 'quiz' %}'">
+            Find your way
+        </button>
+        {% else %}
+            <p style="
+                font-size: 24px;
+                color: white;
+                background-color: rgba(0, 0, 0, 0.5);
+                padding: 20px 40px;
+                border-radius: 50px;
+                display: inline-block;
+            ">
+                Quiz is not active yet.
+            </p>
+                    </div>
+        {% endif %}
+    </div>
+</body>
+</html>
+{% endblock %}

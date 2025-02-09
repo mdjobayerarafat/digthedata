@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Your Hint Requests</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Requested At</th>
+            <th>Hint</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for request in hint_requests %}
+        <tr>
+            <td>{{ request.question.question_text }}</td>
+            <td>{{ request.requested_at }}</td>
+            <td>{{ request.hint.hint_text if request.hint else 'Pending' }}</td>
+            <td>{{ 'Fulfilled' if request.is_fulfilled else 'Pending' }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No hint requests found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

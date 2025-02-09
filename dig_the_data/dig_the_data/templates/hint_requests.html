@@ -1,0 +1,169 @@
+<!-- hint_requests.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@200;300;400;500;600;700&display=swap");
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Open Sans", sans-serif;
+    }
+    body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        width: 100%;
+        padding: 0 10px;
+    }
+    body::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            45deg,
+            #333,
+            #4b0082,
+            #800080,
+            #7b68ee,
+            #4682b4
+        );
+        animation: gradient 15s ease infinite;
+        background-position: center;
+        background-size: cover;
+    }
+    @keyframes gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+    .wrapper {
+        width: 100%;
+        max-width: 1200px;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        background: rgba(255, 255, 255, 0.1);
+        overflow-x: auto; /* Allows horizontal scrolling on smaller screens */
+    }
+    h2 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+        color: #fff;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        color: #fff;
+    }
+    th,
+    td {
+        padding: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        text-align: center;
+        white-space: nowrap; /* Prevents text from wrapping */
+    }
+    th {
+        background-color: rgba(255, 255, 255, 0.1);
+        font-weight: 600;
+    }
+    tr:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .wrapper {
+            padding: 15px;
+        }
+        h2 {
+            font-size: 1.5rem;
+        }
+        th,
+        td {
+            padding: 8px;
+            font-size: 14px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .wrapper {
+            padding: 10px;
+        }
+        h2 {
+            font-size: 1.2rem;
+        }
+        th,
+        td {
+            padding: 6px;
+            font-size: 12px;
+        }
+
+        /* Hide "Requested At" and "Status" columns on mobile */
+        th:nth-child(2),
+        td:nth-child(2),
+        th:nth-child(4),
+        td:nth-child(4) {
+            display: none;
+        }
+    }
+</style>
+<div class="wrapper">
+    <h2>Your Hint Requests</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Requested At</th>
+                <th>Hint</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in hint_requests %}
+            <tr>
+                <td>{{ request.question.question_text }}</td>
+                <td>{{ request.requested_at }}</td>
+                <td>
+                    {% if request.hint %}
+                        {{ request.hint.hint_text }}
+                    {% else %}
+                        Pending
+                    {% endif %}
+                </td>
+                <td>
+                    {% if request.is_fulfilled %}
+                        Fulfilled
+                    {% else %}
+                        Pending
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No hint requests found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<script>
+    // Auto-refresh the page every 20 seconds (20000 milliseconds)
+    setTimeout(function() {
+        location.reload();
+    }, 20000);
+</script>
+{% endblock %}

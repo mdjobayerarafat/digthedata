@@ -1,0 +1,332 @@
+{% load custom_filters %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Questions and Answers</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@200;300;400;500;600;700&display=swap");
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Open Sans", sans-serif;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            width: 100%;
+            padding: 0 10px;
+            background: linear-gradient(45deg, #333, #4b0082, #800080, #7b68ee, #4682b4);
+            animation: gradient 15s ease infinite;
+            background-size: 400% 400%;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 800px;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .qa {
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .question {
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .input-field {
+            position: relative;
+            margin: 15px 0;
+        }
+
+        .input-field label {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            color: #fff;
+            font-size: 16px;
+            pointer-events: none;
+            transition: 0.15s ease;
+        }
+
+        .input-field textarea {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #ccc;
+            outline: none;
+            font-size: 16px;
+            color: #fff;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .input-field textarea:focus ~ label,
+        .input-field textarea:not(:placeholder-shown) ~ label {
+            font-size: 0.8rem;
+            top: 10px;
+            transform: translateY(-120%);
+        }
+
+        button {
+            background: #fff;
+            color: #000;
+            font-weight: 600;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 16px;
+            transition: 0.3s ease;
+            margin-top: 10px;
+            width: auto; /* Default width for buttons */
+        }
+
+        button:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Style for disabled fields */
+        textarea:disabled {
+            background-color: #83c5be !important;
+            color: #155724 !important;
+            border-color: #c3e6cb !important;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .wrapper {
+                padding: 0px; /* Adjust padding for smaller screens */
+            }
+
+            .qa {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            button {
+                width: 100%; /* Full width buttons on smaller screens */
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5em; /* Smaller heading on very small screens */
+            }
+
+            .qa {
+ padding: 10px;
+            }
+
+            button {
+                padding: 8px; /* Smaller padding for buttons */
+            }
+
+            .input-field textarea {
+                padding: 8px; /* Adjust padding for text areas */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>Team {{ team.name }}</h1>
+        <h1>Hey {{ team.name }}, Find your way</h1>
+        <div style="background-color: #dddddd1e; padding: 20px; border-radius: 5px; margin: 20px;">
+            <form id="qaForm">
+                <center>
+                    {% csrf_token %}
+                    <h1>Indoor Questions</h1>
+                    {% for question in common_questions %}
+                        <div class="qa">
+                            <p class="question">{{ forloop.counter }}. {{ question.question_text }}</p>
+                            {% if question.link %}
+                                <a
+                                    href="{{ question.link }}"
+                                    target="_blank"
+                                    style="
+                                        display: inline-block;
+                                        padding: 10px 20px;
+                                        background-color: #83c5be;
+                                        color: white;
+                                        text-decoration: none;
+                                        border-radius: 5px;
+                                        transition: background-color 0.3s ease;
+                                    "
+                                    onmouseover="this.style.backgroundColor='#006d77'"
+                                    onmouseout="this.style.backgroundColor='#83c5be'"
+                                >
+                                    Link
+                                </a>
+                            {% endif %}
+                            <p>{{ question.description }}</p>
+                            <div class="input-field">
+                                <textarea
+                                    class="answer"
+                                    rows="4"
+                                    placeholder="Type your answer here..."
+                                    id="answer_{{ question.id }}"
+                                    {% if answered_questions|get_item:question.id %} disabled {% endif %}
+                                ></textarea>
+                            </div>
+                            <button
+                                type="button"
+                                onclick="submitAnswer({{ question.id }})"
+                                {% if answered_questions|get_item:question.id %} disabled {% endif %}
+                            >
+                                Submit
+                            </button>
+                            <button
+                                type="button"
+                                onclick="window.open('{% url 'request_hint' %}', '_blank')"
+                                style="background-color: #ffa500;"
+                            >
+                                Hint
+                            </button>
+                            <div id="hint_{{ question.id }}"></div>
+                        </div>
+                    {% endfor %}
+                    <h1>Outdoor Questions</h1>
+                    {% for question in unique_questions %}
+                        <div class="qa">
+                            <p class="question">{{ forloop.counter }}. {{ question.question_text }}</p>
+                            {% if question.link %}
+                                <a
+                                    href="{{ question.link }}"
+                                    target="_blank"
+                                    style="
+                                        display: inline-block;
+                                        padding: 10px 20px;
+                                        background-color: #83c5be;
+                                        color: white;
+                                        text-decoration: none;
+                                        border-radius: 5px;
+                                        transition: background-color 0.3s ease;
+                                    "
+                                    onmouseover="this.style.backgroundColor='#006d77'"
+                                    onmouseout="this.style.backgroundColor='#83c5be'"
+                                >
+                                    See More
+                                </a>
+                            {% endif %}
+                            <p>{{ question.description }}</p>
+                            <div class="input-field">
+                                <textarea
+                                    class="answer"
+                                    rows="4"
+                                    placeholder="Type your answer here..."
+                                    id="answer_{{ question.id }}"
+                                    {% if answered_questions|get_item:question.id %} disabled {% endif %}
+                                ></textarea>
+                            </div>
+                            <button
+                                type="button"
+                                onclick="submitAnswer({{ question.id }})"
+                                {% if answered_questions|get_item:question.id %} disabled {% endif %}
+                            >
+                                Submit
+                            </button>
+                            <button
+                                type="button"
+                                onclick="window.open('{% url 'request_hint' %}', '_blank')"
+                                style="background-color: #ffa500;"
+                            >
+                                Hint
+                            </button>
+                            <div id="hint_{{ question.id }}"></div>
+                        </div>
+                    {% endfor %}
+                </center>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function submitAnswer(questionId) {
+            const answerInput = document.getElementById(`answer_${questionId}`);
+            const answer = answerInput.value;
+
+            fetch(`/submit_answer/${questionId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ answer: answer })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.is_correct ? 'Correct answer!' : 'Wrong answer!');
+                    if (data.is_correct) {
+                        answerInput.disabled = true;
+                        answerInput.style.backgroundColor = '#137547';
+                        answerInput.style.color = '#155724';
+                        answerInput.style.borderColor = '#c3e6cb';
+                    }
+                } else {
+                    alert(data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error submitting answer:', error);
+            });
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const disabledTextareas = document.querySelectorAll('textarea:disabled');
+            disabledTextareas.forEach(textarea => {
+                textarea.style.backgroundColor = '#137547';
+                textarea.style.color = '#155724';
+                textarea.style.borderColor = '#c3e6cb';
+            });
+        });
+    </script>
+</body>
+</html>
