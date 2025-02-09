@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/asset/ncc.png" type="image/png">
+    <title>DIG THE DATA 3.0</title>
+    <link rel="icon" href="ncc.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- tailwind -->
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+
+    <style>
+        .text-primary{
+            color: bisque;
+        }
+
+        .bg-main{
+             /* background: linear-gradient(to right,#400040, #680168,#7d017d, #680168,#400040
+            );
+
+
+            background: linear-gradient(to right,#400040, #680168,#7d017d, #680168,#400040
+            );  */
+
+
+            background: linear-gradient(45deg,rgb(161, 0, 179) ,rgb(97, 0, 208),rgb(161, 0, 179) , rgb(161, 0, 179) ,rgb(97, 0, 208),rgb(161, 0, 179) ,rgb(161, 0, 179) ,rgb(97, 0, 208),rgb(161, 0, 179) );
+            background-size: 400%  100%;      
+            animation: moving-grad 15s    ease  infinite  ;
+
+        }
+
+         .boody-grad{
+            background: linear-gradient(45deg, #333,); 
+            background-size: 20% 20%;  
+            animation: moving-grad   ease delay infinite alternate-reverse ;
+        }
+        @keyframes moving-grad {
+  0% {
+    background-position: 0% 0%;
+    
+    
+  }
+  50% {
+    background-position: 100% 100%; 
+    
+  }
+  100% {
+    background-position: 0%  0%;
+  }
+
+}   
+
+        .btn-btn:hover{
+    background-color: rgb(10, 0, 52);
+    scale: 1.05;
+    transform: translateY(-1px); 
+     
+    box-shadow: 0px 10px 40px  rgba(0, 71, 84, 0.244) ;          
+    
+    transition: all .2s ease;
+  }
+.owl-nav {
+    position: absolute;
+    top: 50%;
+    width: 97%;
+    display: flex;
+    justify-content: space-between;
+    z-index: 10;
+}
+.owl-nav button {
+    background: none;
+    border: none;
+    font-size: 2em;
+    color: white;
+    cursor: pointer;
+}
+.owl-nav .owl-prev {
+    left: 0;
+}
+.owl-nav .owl-next {
+    right: 0;
+}
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.logo-container img {
+    height: 65px;
+    margin-right: 10px;
+}
+.logo-container span {
+    font-size: 1.5em;
+    font-family: 'Courier New', Courier, monospace;
+}
+    </style>
+
+    
+   
+</head>
+<body class=" bg-main   text-white  ">
+
+    
+
+    <!-- nav -->
+    <nav style="background: #33333339; padding: 10px; animation: fadeIn 2s ease-in-out;">
+        <ul style="list-style: none; margin: 0; padding: 0; display: flex; justify-content: right; flex-wrap: wrap;">
+            <li style="margin: 0 10px;"><a href="#details" class="nav-link" style="color: white; text-decoration: none;">Details</a></li>
+            <li style="margin: 0 10px;"><a href="#registration" class="nav-link" style="color: white; text-decoration: none;">Registration</a></li>
+            <li style="margin: 0 10px;"><a href="#roadmap" class="nav-link" style="color: white; text-decoration: none;">Roadmap</a></li>
+        </ul>
+    </nav>
+<header class=" max-w-xl mx-auto  ">
+
+<!-- club name -->
+    
+<div class="logo-container">
+    <img src="/asset/ncc.png" alt="NCC Logo">
+    <span style="text-align: center; display: block;">NITER COMPUTER CLUB PRESENT</span>
+</div>
+
+</header>
+
+
+
+<!-- Hero section -->
+    <section  class=" flex flex-col gap-5  m-5 px-10  lg:flex-row  max-w-screen-xl    mx-auto   ">
+        <!-- left -->
+        <div class=" shadow-2xl shadow-[#3e2553] bg-gradient-to-br from-[#f7c2ff] to-[#ba9eff] lg:w-1/2 rounded-3xl " >
+            <div >
+                <img class="" src="/asset/dtd.png" alt="Dig The Data 3.0">
+            </div>
+        </div>
+        <!-- right -->
+        <div id="details"  class="shadow-2xl shadow-[#3e2553]  p-5  lg:w-1/2 lg:flex justify-center items-center rounded-3xl bg-gray-50/10 text-teal-50          
+           " >
+            
+            <div class="font-semibold lg:text-xl text-center my-8">
+            <h1 class="text-3xl lg:text-4xl my-5  font-bold  ">DIG THE DATA 3.0</h1>
+            <p class="">Date: 25th February 2025</p>
+            <p>Time: 9:00 AM - 5:00 PM</p>
+            <p class="mt-5 text-sm lg:text-lg">Location: AD 202, Conference Room, NITER</p>
+            <p class="text-sm lg:text-lg">Push the boundaries and Step beyond convention.</p>
+            </div>
+       
+    </div>
+    
+               
+</section>
+
+<section class="my-20 mx-auto ">
+    <div id="registration" class=" flex  ">
+        <a href="registration.html" class="py-5 px-10 mx-auto rounded-2xl lg:text-xl  bg-[#00245a]
+        btn-btn shadow-xl font-semibold
+        bg-gradient-to-r   from-[#ff0000] to-[#ff0000] 
+        
+         ">Register Now</a>
+    </div>
+</section>
+
+
+
+
+    
+<hr style="border: 0; height: 1px; background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(255, 255, 255, 0.75), rgba(0, 0, 0, 0));">
+    <!-- roadmap section -->
+    <section class="max-w-screen-xl mx-auto " id="roadmap">
+        <h2 class="text-center text-4xl  font-semibold p-10">DIG THE DATA 3.0 Roadmap</h2>
+        <div class="grid mb-30 grid-cols-1 lg:grid-cols-6 gap-5 mx-5 ">
+            <div class="shadow-2xl shadow-[#3e2553] font-medium space-y-3 p-5 rounded-xl bg-gray-50/10 text-teal-50  text-center ">
+                <h3>Registration Opens</h3><br>
+                <h3>08:00 AM</h3><br>
+                <h3>8 February 2025</h3>
+            </div>
+            <div class="shadow-2xl shadow-[#3e2553] font-medium space-y-3 p-5 rounded-xl bg-gray-50/10 text-teal-50  text-center ">
+                <h3>Registration Close</h3><br>
+                <h3>12:00 PM</h3><br>
+                <h3>21st February 2025</h3>
+            </div>
+            <div class="shadow-2xl shadow-[#3e2553] font-medium space-y-3 p-5 rounded-xl bg-gray-50/10 text-teal-50  text-center ">
+                <h3>Preliminary Round</h3><br>
+                <h3>03:00 PM</h3><br>
+                <h3>23 February 2025</h3>
+            </div>
+            <div class="shadow-2xl shadow-[#3e2553] font-medium space-y-3 p-5 rounded-xl bg-gray-50/10 text-teal-50 text-center  ">
+                <h3>Finalist Announcement</h3>
+                <h3>05:00 PM</h3><br>
+                <h3>24 February 2025</h3>
+            </div>
+            <div class="shadow-2xl shadow-[#3e2553] font-medium space-y-3 p-5 rounded-xl bg-gray-50/10 text-teal-50 text-center  ">
+                <h3>Final Round</h3><br>
+                <h3>09:00 AM</h3><br>
+                <h3>25 February 2025</h3>
+            </div>
+            <div class="shadow-2xl shadow-[#3e2553] font-medium space-y-3 p-5 rounded-xl bg-gray-50/10 text-teal-50 text-center  ">
+                <h3>NCC Orientation and
+                    DTD3.0 Prize Giving</h3>
+                <h3>01:30 PM</h3>
+                <h3>26 February 2025</h3>
+            </div>
+            
+           
+        </div>
+    </section>
+    <hr style="border: 0; height: 1px; background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(255, 255, 255, 0.75), rgba(0, 0, 0, 0));"><br><br><br>
+    
+
+    
+<!-- big-video -->
+    <section id="teaser" class="mx-auto  max-w-screen-xl flex flex-col justify-center items-center">
+        <h2 class="text-2xl font-semibold lg:text-4xl text-center">Few Moments of DIG THE DATA 2.0</h2>
+        
+        <div class="h-[15rem] lg:h-[40rem] m-10 w-[90%] mx-auto">
+            <iframe class="h-full rounded-lg w-full" src="https://www.youtube.com/embed/6lXEiXb05uA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        </section>
+
+
+<!-- few Moments -->
+    <section id="gallery" class= " mx-auto max-w-screen-xl  mb-20 ">
+        
+        
+        <div class="image-gallery p-5 owl-carousel">
+            <div><img class="rounded-xl" src="/asset/p1.jpg" alt="Image 1"></div>
+            <div><img class="rounded-xl" src="/asset/p2.jpg" alt="Image 2"></div>
+            <div><img class="rounded-xl" src="/asset/p3.jpg" alt="Image 3"></div>
+            <div><img class="rounded-xl" src="/asset/p4.jpg" alt="Image 4"></div>
+            <div><img class="rounded-xl" src="/asset/p6.jpg" alt="Image 5"></div>
+            <div><img class="rounded-xl" src="/asset/p7.jpg" alt="Image 6"></div>
+            <div><img class="rounded-xl" src="/asset/p8.jpg" alt="Image 7"></div>
+            <div><img class="rounded-xl" src="/asset/p9.jpg" alt="Image 8"></div>
+            
+        </div>
+    </section>
+
+    <hr style="border: 0; height: 1px; background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(255, 255, 255, 0.75), rgba(0, 0, 0, 0));"><br><br><br>
+
+    <section id="gallery" class= " mx-auto max-w-screen-xl  mb-20 ">
+         <h2 class="text-2xl font-semibold lg:text-4xl text-center">Few Moments of DIG THE DATA 1.0</h2>
+        
+        <div class="image-gallery p-5 owl-carousel">
+            <div><img class="rounded-xl" src="/asset/p11.jpg" alt="Image 1"></div>
+            <div><img class="rounded-xl" src="/asset/p12.jpg" alt="Image 2"></div>
+            <div><img class="rounded-xl" src="/asset/p13.jpg" alt="Image 3"></div>
+            <div><img class="rounded-xl" src="/asset/p14.jpg" alt="Image 4"></div>
+            <div><img class="rounded-xl" src="/asset/p15.jpg" alt="Image 5"></div>
+            <div><img class="rounded-xl" src="/asset/p16.jpg" alt="Image 5"></div>
+            <div><img class="rounded-xl" src="/asset/p17.jpg" alt="Image 6"></div>
+            <div><img class="rounded-xl" src="/asset/p18.jpg" alt="Image 7"></div>
+            <div><img class="rounded-xl" src="/asset/p19.jpg" alt="Image 8"></div>
+            <div><img class="rounded-xl" src="/asset/p20.jpg" alt="Image 5"></div>
+            
+        </div>
+    </section>
+
+    <script>
+        $(document).ready(function(){
+            $(".owl-carousel").owlCarousel({
+                items: 1, // Show 1 image per slide on small screens
+                loop: true,
+                margin: 10,
+                nav: true,
+                navText: ["<", ">"],
+                autoplay: true,
+                autoplayTimeout: 3000,
+                autoplayHoverPause: true,
+                responsive: {
+                    600: {
+                        items: 2 // Show 2 images per slide on tablets
+                    },
+                    1000: {
+                        items: 3 // Show 3 images per slide on desktops
+                    }
+                }
+            });
+        });
+    </script>
+
+
+<!-- About Details -->
+    <section id="dtd" class="max-w-screen-xl p-5 mx-auto">  
+
+        <div class="flex flex-col lg:flex-row lg:gap-5  gap-10  ">
+            <div class="w-[95%]  mx-auto rounded-xl bg-gray-50/10 text-teal-50 p-5 py-10 " >
+                <h3 class="py-5 text-2xl font-semibold">About Dig the data 3.0</h3>
+                <p>Organized by NCC(NITER Computer Club), It is an exclusive event for the NITER 14th batch. This time, we will bring the event to you with a twist unlike never seen before. Get ready and put your thinking caps on as we want the best performance out of you. 
+
+                    The events will be covered in various stages.
+                </p>
+            </div>
+
+            <div class="w-[95%] mx-auto rounded-xl bg-gray-50/10 text-teal-50 p-5 py-10 " >
+                <h3 class="py-5 text-2xl font-semibold " >What is DIG THE DATA?</h3>
+                <p>Dig The Data Is a treasure hunt event to display the creativity and critical thinkings of freshers. It's a fresher exclusive event where they perform in various stages and ultimately stand tall on the podium. In this event, freshers explore the whole campus looking for clues and solve problems while exploring various details about our lovely campus and get familiarised with it. The previous seasons displayed the enthusiasm and the energy it provides, creating a wonderful and everlasting memory.</p>
+            </div>
+        </div>
+        
+    </section>
+
+
+
+
+
+    <!-- footer -->
+    <footer id="about" class="bg-gray-50/20 text-center p-5 mt-5">
+        <div class="flex flex-col lg:flex-row justify-center items-center gap-10">
+            <div>
+                <p class="text-lg">Follow us on:</p>
+                <div class="flex justify-center my-5 w-30 gap-5 mx-auto">
+                    <a href="https://www.facebook.com/NiterComputerClub" target="_blank">
+                        <img src="/asset/facebook (1).png" alt="Media Partner" style="width: 50px; height: auto;">
+                    </a>
+                    <a href="https://www.youtube.com/@NITERComputerClub" target="_blank">
+                        <img src="/asset/youtube.png" alt="Media Partner" style="width: 50px; height: auto;">
+                    </a>
+                </div>
+            </div>
+            <div>
+                <p class="text-lg">Media Partner:</p>
+                <div class="flex justify-center my-5 w-30 gap-5 mx-auto">
+                    <a href="https://www.facebook.com/NITER.Photographic" target="_blank">
+                        <img src="/asset/nfps.png" alt="Media Partner" style="width: 50px; height: auto;">
+                        
+                    </a>
+                </div>
+            </div>
+        </div>
+        <p class="font-semibold">2025 &copy; All Rights Reserved By NITER Computer Club - NCC</p>
+    </footer>
+</body>
+</html>
