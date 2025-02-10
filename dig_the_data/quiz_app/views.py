@@ -23,37 +23,45 @@ json_response_async = sync_to_async(JsonResponse)
 async def final_round(request):
     return render(request, 'home.html')
 
-async def login_view(request):
+
+def login_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
+        team_name = request.POST['team_name']
         password = request.POST['password']
 
-        user = await sync_to_async(authenticate)(request, username=username, password=password)
+        try:
+            team = Team.objects.get(name=team_name)
 
-        if user:
-            await sync_to_async(login)(request, user)
-            return redirect('team_profile')
+            if team.check_password(password):
+                request.session['team_id'] = team.id
+                return redirect('team_profile')
+        except Team.DoesNotExist:
+            pass
+
+        return HttpResponse("Invalid team name or password")
 
     return render(request, 'login.html')
 
 
 @login_required
 async def team_profile(request):
-    # Wrap the entire queryset execution in sync_to_async
-    get_team = sync_to_async(lambda: Team.objects.get(user=request.user))
-    get_quiz = sync_to_async(lambda: Quiz.objects.first())
-    get_team_users = sync_to_async(lambda: list(TeamUser.objects.filter(team=team)))
+    # Get the team ID from the session
+    team_id = request.session.get('team_id')
 
-    team = await get_team()
-    quiz = await get_quiz()
-    team_users = await get_team_users()
+    # Fetch the team asynchronously using the team ID
+    team = await sync_to_async(Team.objects.get)(id=team_id)
+
+    # Fetch the quiz asynchronously
+    quiz = await sync_to_async(Quiz.objects.first)()
+
+    # Fetch team users asynchronously
+    team_users = await sync_to_async(list)(TeamUser.objects.filter(team=team))
 
     return render(request, 'team_profile.html', {
         'team': team,
         'quiz': quiz,
         'team_users': team_users
     })
-
 
 from django.template.loader import render_to_string
 from django.http import HttpResponse
@@ -78,10 +86,17 @@ async def render_async(request, template_name, context=None, status=200):
 
     # Return an HttpResponse with the rendered template
     return HttpResponse(rendered_template, status=status)
+
+
 @login_required
 async def quiz_view(request):
-    # Fetch the team and quiz asynchronously
-    team = await sync_to_async(Team.objects.get)(user=request.user)
+    # Get the team ID from the session
+    team_id = request.session.get('team_id')
+
+    # Fetch the team asynchronously using the team ID
+    team = await sync_to_async(Team.objects.get)(id=team_id)
+
+    # Fetch the quiz asynchronously
     quiz = await sync_to_async(Quiz.objects.first)()
 
     # Check if the quiz is active
@@ -90,7 +105,8 @@ async def quiz_view(request):
 
     # Fetch common and unique questions asynchronously
     common_questions = await sync_to_async(list)(Question.objects.filter(quiz=quiz, common_question=True))
-    unique_questions = await sync_to_async(list)(Question.objects.filter(teamquestion__team=team, common_question=False))
+    unique_questions = await sync_to_async(list)(
+        Question.objects.filter(teamquestion__team=team, common_question=False))
 
     # Fetch submitted answers with related questions asynchronously
     submitted_answers = await sync_to_async(list)(Answer.objects.filter(team=team).select_related('question'))
@@ -107,8 +123,6 @@ async def quiz_view(request):
         'answered_questions': answered_questions or {},
         'team': team
     })
-
-
 @require_POST
 async def submit_answer(request, question_id):
     try:
@@ -126,7 +140,7 @@ async def submit_answer(request, question_id):
         is_correct = (answer_text.strip().lower() == question.correct_answer.strip().lower())
 
         if is_correct:
-            get_team = sync_to_async(lambda: Team.objects.get(user=request.user))
+            get_team = sync_to_async(lambda: Team.objects.get(id=request.session.get('team_id')))
             team = await get_team()
 
             create_answer = sync_to_async(Answer.objects.create)
@@ -149,16 +163,20 @@ async def submit_answer(request, question_id):
             status=500
         )
 
-
 @login_required
 async def request_hint(request):
     if request.method == 'POST':
-        team_name = request.POST.get('team_name')
         question_id = request.POST.get('question_id')
 
+        # Get the team ID from the session
+        team_id = request.session.get('team_id')
+
         try:
-            team = await sync_to_async(Team.objects.get)(name=team_name)
+            # Fetch the team and question asynchronously
+            team = await sync_to_async(Team.objects.get)(id=team_id)
             question = await sync_to_async(Question.objects.get)(id=question_id)
+
+            # Create a new hint request
             await sync_to_async(HintRequest.objects.create)(team=team, question=question)
             return redirect('hint_requests')
         except Team.DoesNotExist:
@@ -167,7 +185,8 @@ async def request_hint(request):
             return JsonResponse({'success': False, 'error': 'Question not found.'})
 
     # Fetch user team and questions asynchronously
-    user_team = await sync_to_async(Team.objects.get)(user=request.user)
+    team_id = request.session.get('team_id')
+    user_team = await sync_to_async(Team.objects.get)(id=team_id)
     questions = await sync_to_async(list)(Question.objects.all())  # Ensure this is evaluated
 
     # Use render_async instead of render
@@ -175,31 +194,45 @@ async def request_hint(request):
         'questions': questions,
         'user_team': user_team
     })
-
 @login_required
 async def hint_requests(request):
-    get_hints = sync_to_async(lambda: list(HintRequest.objects.filter(team__user=request.user)))
+    # Get the team ID from the session
+    team_id = request.session.get('team_id')
+
+    # Fetch the hint requests associated with the team asynchronously
+    get_hints = sync_to_async(lambda: list(HintRequest.objects.filter(team_id=team_id)))
     hint_requests = await get_hints()
+
     return await render_async(request, 'hint_requests.html', {'hint_requests': hint_requests})
 
 
 async def scoreboard(request):
-    get_teams = sync_to_async(lambda: list(Team.objects.all()))
-    get_score = sync_to_async(lambda t: Answer.objects.filter(team=t).aggregate(total=Sum('score'))['total'] or 0)
-    get_hint_count = sync_to_async(lambda t: HintRequest.objects.filter(team=t).count())
-    get_approved_count = sync_to_async(lambda t: HintRequest.objects.filter(team=t, is_fulfilled=True).count())
-    get_answered_count = sync_to_async(lambda t: Answer.objects.filter(team=t, is_correct=True).count())
+    # Fetch all teams asynchronously
+    teams = await sync_to_async(list)(Team.objects.all())
 
-    teams = await get_teams()
     scoreboard_data = []
 
     for team in teams:
-        total_score = await get_score(team)
-        hint_requests = await get_hint_count(team)
-        approved_requests = await get_approved_count(team)
-        answered_questions = await get_answered_count(team)
+        # Fetch scores, hint counts, and answered questions asynchronously
+        total_score = await sync_to_async(
+            lambda t: Answer.objects.filter(team=t).aggregate(total=Sum('score'))['total'] or 0
+        )(team)
 
+        hint_requests = await sync_to_async(
+            lambda t: HintRequest.objects.filter(team=t).count()
+        )(team)
+
+        approved_requests = await sync_to_async(
+            lambda t: HintRequest.objects.filter(team=t, is_fulfilled=True).count()
+        )(team)
+
+        answered_questions = await sync_to_async(
+            lambda t: Answer.objects.filter(team=t, is_correct=True).count()
+        )(team)
+
+        # Calculate score after deduction
         score_after_deduction = total_score - (approved_requests * 5)
+
         scoreboard_data.append({
             'team_name': team.name,
             'score': max(score_after_deduction, 0),
@@ -208,7 +241,10 @@ async def scoreboard(request):
             'solved_questions': answered_questions,
         })
 
+    # Sort the scoreboard data by score and approved requests
     scoreboard_data.sort(key=lambda x: (-x['score'], x['approved_requests']))
+
+    # Render the scoreboard template with the data
     return await render_async(request, 'scoreboard.html', {'scoreboard_data': scoreboard_data})
 
 async def custom_404_view(request, exception):
@@ -222,16 +258,17 @@ class LoginView(APIView):
     async def post(self, request):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
-            username = serializer.validated_data['username']
+            team_name = serializer.validated_data['username']  # Assuming username is the team name
             password = serializer.validated_data['password']
-            user = await sync_to_async(authenticate)(request, username=username, password=password)
-            if user is not None:
-                await sync_to_async(login)(request, user)
+            # Authenticate using the Team model
+            team = await sync_to_async(Team.objects.get)(name=team_name)
+
+            if team.check_password(password):
+                request.session['team_id'] = team.id  # Store team ID in session
                 return Response({"message": "Login successful"}, status=status.HTTP_200_OK)
             else:
                 return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 class TeamViewSet(viewsets.ModelViewSet):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
