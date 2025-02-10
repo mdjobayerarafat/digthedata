@@ -16,6 +16,9 @@ from .serializers import TeamSerializer, QuizSerializer, QuestionSerializer, Hin
 
 
 # Web Views
+def final_round(request):
+    return render(request, 'home.html')
+
 def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
