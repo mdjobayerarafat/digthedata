@@ -49,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'dig_the_data.urls'
@@ -101,8 +102,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LOGIN_URL = '/login/'  # Redirect to this URL if not logged in
-LOGIN_REDIRECT_URL = 'team_profile'  # Redirect to this URL after login
+ # Redirect to this URL after login
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
