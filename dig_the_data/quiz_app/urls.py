@@ -25,7 +25,7 @@ handler500 = custom_500_view
 # URL patterns for web views and REST APIs
 urlpatterns = [
     # Web Views
-    path('', views.final_round, name='final_round'),
+    path('', views.home, name='home'),
     path('login/', views.login_view, name='login_view'),
     path('profile/', team_profile, name='team_profile'),
     path('quiz/', views.quiz_view, name='quiz'),
@@ -33,6 +33,12 @@ urlpatterns = [
     path('submit_answer/<int:question_id>/', submit_answer, name='submit_answer'),
     path('request_hint/', request_hint, name='request_hint'),
     path('hint_requests/', hint_requests, name='hint_requests'),
+path('home1', views.home, name='home'),
+    path('register/', views.register, name='register'),
+
+    path('user_login/', views.user_login_view, name='user_login'),
+    path('user_profile/', views.user_profile, name='user_profile'),
+    path('done/', views.done, name='done'),
 
     # REST APIs
     path('api/login/', LoginView.as_view(), name='login'),

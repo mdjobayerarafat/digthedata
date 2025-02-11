@@ -1,0 +1,29 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dig The Data 3.0 Team Login</title>
+    <link rel="stylesheet" href="{% static 'css/styleindex.css' %}" /> <!-- Ensure you have the static files set up -->
+</head>
+<body>
+    <div class="wrapper">
+       <form method="post" onsubmit="validateLogin(event)"><!-- Replace 'your_login_view_name' with the actual view name -->
+            <h2>User Login</h2>
+            {% csrf_token %}
+            <div class="input-field">
+                <input type="email" name="email" required />
+                <label>Enter your Email</label>
+            </div>
+            <div class="input-field">
+                <input type="password" name="password" required />
+                <label>Enter your password</label>
+            </div>
+            <button type="submit">Log In</button>
+        </form>
+    </div>
+</body>
+</html>

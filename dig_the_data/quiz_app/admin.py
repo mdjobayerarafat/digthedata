@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Team, Quiz, Question, Score, HintRequest, TeamQuestion, Answer, TeamUser , Hint
+from .models import Team, Quiz, Question, Score, HintRequest, TeamQuestion, Answer, TeamUser, Hint, SiteSettings, \
+    UserPerson
+
 
 # Admin configuration for the Team model
 class TeamAdmin(admin.ModelAdmin):
@@ -42,12 +44,22 @@ class AnswerAdmin(admin.ModelAdmin):
     list_display = ('team', 'question', 'submitted_answer', 'score')  # Customize the fields to display
     search_fields = ('team__name', 'question__question_text')  # Enable search by team name and question text
 
-# Admin configuration for the TeamUser  model
-class TeamUserAdmin(admin.ModelAdmin):
-    list_display = ('name', 'position', 'team', 'class_id', 'wp_number', 'email')  # Fields to display in the list view
-    search_fields = ('name', 'email', 'team__name')  # Fields to search in the admin interface
-    list_filter = ('team', 'position')  # Filter options for team users
+ # Filter options for team users
+@admin.register(UserPerson)
+class UserPersonAdmin(admin.ModelAdmin):
+    list_display = ('name', 'class_id', 'department', 'wp_number', 'email','nullable_text_field','password')
+    search_fields = ('name', 'class_id', 'email')
+    list_filter = ('department',)
 
+@admin.register(TeamUser)
+class TeamUserAdmin(admin.ModelAdmin):
+    list_display = ('name', 'position', 'team', 'class_id', 'wp_number', 'email', 'department')
+    search_fields = ('name', 'class_id', 'email')
+    list_filter = ('team', 'department')
+
+@admin.register(SiteSettings)
+class SiteSettingsAdmin(admin.ModelAdmin):
+    list_display = ('registration_open', 'login_open')
 # Register the models with the admin site
 admin.site.register(Team, TeamAdmin)
 admin.site.register(Quiz, QuizAdmin)
@@ -55,6 +67,6 @@ admin.site.register(Question, QuestionAdmin)
 admin.site.register(Score, ScoreAdmin)
 admin.site.register(TeamQuestion, TeamQuestionAdmin)
 admin.site.register(Answer, AnswerAdmin)
-admin.site.register(TeamUser , TeamUserAdmin)
+
 admin.site.register(Hint)  # Register Hint model
 admin.site.register(HintRequest)  # Register HintRequest model

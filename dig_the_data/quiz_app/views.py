@@ -1,18 +1,24 @@
 import json
+import logging
+
 from django.db.models import Sum
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.template.response import TemplateResponse
 from django.urls import reverse
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_http_methods
 from rest_framework import viewsets, permissions, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer
 from rest_framework.views import APIView
 from asgiref.sync import sync_to_async
-from .models import Team, Quiz, Question, HintRequest, Answer, TeamUser , Hint, HintNotification
+
+from .forms import  RegistrationForm
+from .models import Team, Quiz, Question, HintRequest, Answer, TeamUser, Hint, HintNotification, UserPerson, \
+    SiteSettings
 from .serializers import TeamSerializer, QuizSerializer, QuestionSerializer, HintRequestSerializer, AnswerSerializer, \
     TeamUser, HintNotificationSerializer, HintSerializer, TeamUserSerializer, LoginSerializer
 
@@ -20,6 +26,10 @@ Serializer, HintSerializer, HintNotificationSerializer, LoginSerializer
 
 # Web Views
 json_response_async = sync_to_async(JsonResponse)
+
+async_render = sync_to_async(TemplateResponse)
+async_redirect = sync_to_async(redirect)
+
 async def final_round(request):
     return render(request, 'home.html')
 
@@ -252,6 +262,113 @@ async def custom_404_view(request, exception):
 
 async def custom_500_view(request):
     return render(request, '500.html', status=500)
+
+
+@require_http_methods(["GET"])
+async def home(request):
+    settings = await sync_to_async(get_site_settings)()
+
+    return render(request, 'home1.html', {
+        'registration_open': settings.registration_open,
+        'login_open': settings.login_open
+    })
+
+
+def get_site_settings():
+    try:
+        return SiteSettings.objects.first()  # Use .first() instead of .afirst()
+    except SiteSettings.DoesNotExist:
+        # Create default settings if not exist
+        return SiteSettings.objects.create(
+            registration_open=True,
+            login_open=True
+        )
+@sync_to_async
+def validate_form(post_data):
+    form = RegistrationForm(post_data)
+    return form, form.is_valid()
+
+@sync_to_async
+def save_user_form(form):
+    user = form.save(commit=False)
+    user.set_password(form.cleaned_data['password'])
+    user.save()
+
+@sync_to_async
+def get_blank_form():
+    return RegistrationForm()
+
+
+@require_http_methods(["GET", "POST"])
+async def register(request):
+    # Check site settings asynchronously
+    settings = await sync_to_async(SiteSettings.objects.first)()
+    if not settings or not settings.registration_open:
+        return await sync_to_async(render)(request, 'registration_closed.html', {})
+
+    if request.method == 'POST':
+        # Handle form submission asynchronously
+        form = RegistrationForm(request.POST)
+        is_valid = await sync_to_async(form.is_valid)()  # Validate form asynchronously
+        print("Form is valid:", is_valid)  # Debugging
+        if not is_valid:
+            print("Form errors:", form.errors)  # Debugging
+        if is_valid:
+            user = await sync_to_async(form.save)()  # Save the user asynchronously
+            print("User saved:", user)  # Debugging
+            return redirect('done')  # Redirect to a success page
+    else:
+        form = RegistrationForm()  # Display a blank form
+
+    context = {'form': form}
+    return await sync_to_async(render)(request, 'register.html', context)
+logger = logging.getLogger(__name__)
+
+def user_login_view(request):
+    error_message = None
+
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+
+        logger.info(f"Attempting login for email: {email}")
+
+        try:
+            user = UserPerson.objects.get(email=email)
+            logger.info(f"User found: {user.email}")
+
+            if user.check_password(password):
+                # Save email in session
+                request.session['email'] = user.email
+                request.session.save()
+                logger.info("Login successful, redirecting to profile")
+                return redirect('user_profile')
+            else:
+                logger.warning("Invalid password")
+                error_message = "Invalid email or password"
+        except UserPerson.DoesNotExist:
+            logger.warning("User not found")
+            error_message = "Invalid email or password"
+
+    # Render the login template with the error message (if any)
+    return render(request, 'user_login.html', {'error_message': error_message})
+async def user_profile(request):
+    # Get email from session (using sync_to_async)
+    email = await sync_to_async(request.session.get)('email')
+    if not email:
+        logger.warning("No email in session, redirecting to login")
+        return redirect('user_login')
+
+    try:
+        # Fetch user asynchronously
+        user = await sync_to_async(UserPerson.objects.get)(email=email)
+        logger.info(f"Rendering profile for user: {user.email}")
+        return render(request, 'profile.html', {'user': user})
+    except UserPerson.DoesNotExist:
+        logger.warning("User  not found")
+        return redirect('user_login')
+async def done(request):
+    return render(request, 'done.html')
 
 # REST APIs
 class LoginView(APIView):

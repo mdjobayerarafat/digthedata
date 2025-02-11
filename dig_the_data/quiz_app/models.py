@@ -4,10 +4,17 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import User
 
+DEPARTMENT_CHOICES = [
+    ('CSE', 'Computer Science'),
+    ('IT', 'Information Technology'),
+    ('ECE', 'Electronics'),
+    ('MECH', 'Mechanical'),
+    ('EEE', 'Electrical')
+]
 
 class Team(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    password = models.CharField(max_length=128)
+    password = models.CharField(max_length=128 ,default='default_password')
 
     def set_password(self, raw_password):
         self.password = make_password(raw_password)
@@ -78,17 +85,17 @@ class Answer(models.Model):
 
     def __str__(self):
         return f"{self.team.name} - {self.question.question_text} - {self.submitted_answer} (Score: {self.score})"
-class TeamUser (models.Model):
+class TeamUser(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='team_users')
     name = models.CharField(max_length=100)
     position = models.CharField(max_length=50)
     class_id = models.CharField(max_length=20)
     wp_number = models.CharField(max_length=15)
     email = models.EmailField()
+    department = models.CharField(max_length=10, choices=DEPARTMENT_CHOICES)  # Add this field
 
     def __str__(self):
         return f"{self.name} - {self.position} ({self.team.name})"
-
 class Hint(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     hint_text = models.TextField()
@@ -111,3 +118,45 @@ class HintNotification(models.Model):
 
     def __str__(self):
         return f"Notification for {self.recipient.username}: {self.message}"
+
+
+
+class UserPerson(models.Model):
+    name = models.CharField(max_length=100)
+    class_id = models.CharField(max_length=20, unique=True)
+    department = models.CharField(max_length=10, choices=DEPARTMENT_CHOICES, default='CSE')
+    wp_number = models.CharField(max_length=15)
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=128)
+    nullable_text_field = models.TextField( blank=True)  # Nullable text field
+
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
+
+    def check_password(self, raw_password):
+        return check_password(raw_password, self.password)
+
+    def __str__(self):
+        return f"{self.name} ({self.email})"
+
+    def save(self, *args, **kwargs):
+        # Save the UserPerson instance
+        super().save(*args, **kwargs)
+
+        # Create a corresponding TeamUser instance
+        team = Team.objects.get_or_create(name="Default Team")[0]  # Replace with your logic to get the team
+        TeamUser.objects.create(
+            team=team,
+            name=self.name,
+            position="Member",  # Default position, replace with your logic
+            class_id=self.class_id,
+            wp_number=self.wp_number,
+            email=self.email,
+            department=self.department  # Add this field to TeamUser if needed
+        )
+class SiteSettings(models.Model):
+    registration_open = models.BooleanField(default=True)
+    login_open = models.BooleanField(default=True)
+
+    def __str__(self):
+        return "Site Settings"
