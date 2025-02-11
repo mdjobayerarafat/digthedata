@@ -5,11 +5,12 @@ from django.db import models
 from django.contrib.auth.models import User
 
 DEPARTMENT_CHOICES = [
-    ('CSE', 'Computer Science'),
-    ('IT', 'Information Technology'),
-    ('ECE', 'Electronics'),
-    ('MECH', 'Mechanical'),
-    ('EEE', 'Electrical')
+    ('CSE', 'Computer Science and Engineering'),
+    ('EEE', 'Electrical and Electronics Engineering'),
+    ('IPE', 'Industrial & Production Engineering'),
+    ('TE', 'Textile Engineering'),
+    ('FDAE', 'Fashion Design & Apparel Engineering'),
+    ('EEE', 'Electrical and Electronics Engineering')
 ]
 
 class Team(models.Model):

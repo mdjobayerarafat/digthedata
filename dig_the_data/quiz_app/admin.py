@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import Team, Quiz, Question, Score, HintRequest, TeamQuestion, Answer, TeamUser, Hint, SiteSettings, \
-    UserPerson
-
+from django.contrib.auth.hashers import make_password
+from .models import Team, Quiz, Question, Score, HintRequest, TeamQuestion, Answer, TeamUser, Hint, SiteSettings, UserPerson
+import logging
 
 # Admin configuration for the Team model
 class TeamAdmin(admin.ModelAdmin):
@@ -18,6 +18,7 @@ class TeamAdmin(admin.ModelAdmin):
         if obj:  # If the object already exists, make the password field readonly
             return ['password']
         return []
+
 # Admin configuration for the Quiz model
 class QuizAdmin(admin.ModelAdmin):
     list_display = ('id', 'is_active')  # Display quiz ID and active status
@@ -33,6 +34,7 @@ class QuestionAdmin(admin.ModelAdmin):
 class TeamQuestionAdmin(admin.ModelAdmin):
     list_display = ('id', 'team', 'question', 'hint_used', 'answered')  # Display team-question relationship details
     list_filter = ('team', 'answered')  # Filter by team and answered status
+    raw_id_fields = ('team', 'question')  # Optimize for large datasets
 
 # Admin configuration for the Score model
 class ScoreAdmin(admin.ModelAdmin):
@@ -44,22 +46,7 @@ class AnswerAdmin(admin.ModelAdmin):
     list_display = ('team', 'question', 'submitted_answer', 'score')  # Customize the fields to display
     search_fields = ('team__name', 'question__question_text')  # Enable search by team name and question text
 
- # Filter options for team users
-@admin.register(UserPerson)
-class UserPersonAdmin(admin.ModelAdmin):
-    list_display = ('name', 'class_id', 'department', 'wp_number', 'email','nullable_text_field','password')
-    search_fields = ('name', 'class_id', 'email')
-    list_filter = ('department',)
 
-@admin.register(TeamUser)
-class TeamUserAdmin(admin.ModelAdmin):
-    list_display = ('name', 'position', 'team', 'class_id', 'wp_number', 'email', 'department')
-    search_fields = ('name', 'class_id', 'email')
-    list_filter = ('team', 'department')
-
-@admin.register(SiteSettings)
-class SiteSettingsAdmin(admin.ModelAdmin):
-    list_display = ('registration_open', 'login_open')
 # Register the models with the admin site
 admin.site.register(Team, TeamAdmin)
 admin.site.register(Quiz, QuizAdmin)
@@ -67,6 +54,7 @@ admin.site.register(Question, QuestionAdmin)
 admin.site.register(Score, ScoreAdmin)
 admin.site.register(TeamQuestion, TeamQuestionAdmin)
 admin.site.register(Answer, AnswerAdmin)
-
 admin.site.register(Hint)  # Register Hint model
 admin.site.register(HintRequest)  # Register HintRequest model
+admin.site.register(SiteSettings)  # Register SiteSettings model
+admin.site.register(TeamUser)  # Register TeamUser model

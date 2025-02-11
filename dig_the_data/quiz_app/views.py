@@ -30,8 +30,8 @@ json_response_async = sync_to_async(JsonResponse)
 async_render = sync_to_async(TemplateResponse)
 async_redirect = sync_to_async(redirect)
 
-async def final_round(request):
-    return render(request, 'home.html')
+async def reg_error(request):
+    return render(request, 'reg.html')
 
 
 def login_view(request):

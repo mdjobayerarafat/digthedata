@@ -26,6 +26,7 @@ handler500 = custom_500_view
 urlpatterns = [
     # Web Views
     path('', views.home, name='home'),
+    path('/reg_error', views.reg_error, name='reg_error'),
     path('login/', views.login_view, name='login_view'),
     path('profile/', team_profile, name='team_profile'),
     path('quiz/', views.quiz_view, name='quiz'),
