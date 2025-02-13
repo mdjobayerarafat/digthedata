@@ -168,7 +168,6 @@ This project is used by the following companies:
 ## Screenshots
 
 ![App Screenshot](https://i.ibb.co.com/7dDdVmsF/Screenshot-2025-02-13-13-49-11.png)
-
 ![App Screenshot](https://i.ibb.co.com/HTsfWmFh/Screenshot-2025-02-13-13-49-35.png)
 ![App Screenshot](https://i.ibb.co.com/sprZzHbj/Screenshot-2025-02-13-13-50-15.png)
 ![App Screenshot](https://i.ibb.co.com/fYKtLJf2/Screenshot-2025-02-13-13-50-32.png)
